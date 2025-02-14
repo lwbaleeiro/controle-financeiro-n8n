@@ -1,0 +1,949 @@
+{
+  "name": "Controle Financeiro Automatizado",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "getAll",
+        "simple": false,
+        "filters": {
+          "labelIds": [
+            "INBOX"
+          ],
+          "sender": "dev.baleeiro@gmail.com"
+        },
+        "options": {
+          "dataPropertyAttachmentsPrefixName": "attachment_",
+          "downloadAttachments": true
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        480,
+        20
+      ],
+      "id": "1f22f182-9986-4b6e-bb90-e546c4dcf1d6",
+      "name": "readEmails",
+      "webhookId": "3fcfde7a-ed13-4e5b-942c-cccc192dc7f9",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "yQd81PFOuETTrejQ",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        320,
+        20
+      ],
+      "id": "62b9ca36-ed05-4848-82a1-410647735a1c",
+      "name": "startWorkflow"
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "attachment_2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        660,
+        20
+      ],
+      "id": "1bb24cc6-f88e-412f-8580-a6725d7ff44b",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1aXijBfikktjMGwabQLt5th1fHC5nAFSA-TnygftuvV8",
+          "mode": "list",
+          "cachedResultName": "Controle Financeiro",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1aXijBfikktjMGwabQLt5th1fHC5nAFSA-TnygftuvV8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Extrato",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1aXijBfikktjMGwabQLt5th1fHC5nAFSA-TnygftuvV8/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "DATA": "={{ $json.Data }}",
+            "VALOR": "={{$json[\"Valor\"] * 1}}",
+            "ID": "={{ $json.Identificador }}",
+            "DESCRIÇÃO": "={{ $json['Descrição'] }}"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "DATA",
+              "displayName": "DATA",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "VALOR",
+              "displayName": "VALOR",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "DESCRIÇÃO",
+              "displayName": "DESCRIÇÃO",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "CATEGORIA",
+              "displayName": "CATEGORIA",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "UpdatedType",
+              "displayName": "UpdatedType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        860,
+        20
+      ],
+      "id": "a631f798-cb5f-4738-b2bb-0cf9bf668724",
+      "name": "Google Sheets",
+      "alwaysOutputData": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "iapbwbDDe7xALx5M",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('readEmails').item.json.id }}",
+        "labelIds": [
+          "Label_1"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1100,
+        20
+      ],
+      "id": "2cff5596-12a1-4f4b-af40-97c0b7bb2f84",
+      "name": "setEmailAsProcessed",
+      "webhookId": "8ac36d7e-9efc-4543-80f6-73e304cbfc57",
+      "executeOnce": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "yQd81PFOuETTrejQ",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1aXijBfikktjMGwabQLt5th1fHC5nAFSA-TnygftuvV8",
+          "mode": "list",
+          "cachedResultName": "Controle Financeiro",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1aXijBfikktjMGwabQLt5th1fHC5nAFSA-TnygftuvV8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Extrato",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1aXijBfikktjMGwabQLt5th1fHC5nAFSA-TnygftuvV8/edit#gid=0"
+        },
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "rangeDefinition": "specifyRangeA1",
+              "range": "A:E"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        320,
+        400
+      ],
+      "id": "74972c7d-2a3b-4318-84d8-896ee1b831af",
+      "name": "getAllTransactions",
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "iapbwbDDe7xALx5M",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Processa as transações para sugerir categorias faltantes\nconst items = $input.all();\n\n// Objeto para armazenar contagem de categorias por descrição similar\nconst descriptionCategoryCounts = {};\n\n// Array para IDs sem categoria\nconst missingCategoryIds = [];\n\n// Primeira passada: coletar dados\nfor (const item of items) {\n  const categoria = item.json.CATEGORIA ? item.json.CATEGORIA.trim() : '';\n  const descricao = item.json.DESCRIÇÃO ? item.json.DESCRIÇÃO.trim().toLowerCase() : '';\n\n  if (categoria === '') {\n    missingCategoryIds.push({\n      id: item.json.ID,\n      descricao: descricao\n    });\n  } else {\n    // Agrupa por descrição similar e conta as categorias\n    if (!descriptionCategoryCounts[descricao]) {\n      descriptionCategoryCounts[descricao] = {};\n    }\n    descriptionCategoryCounts[descricao][categoria] = (descriptionCategoryCounts[descricao][categoria] || 0) + 1;\n  }\n}\n\n// Função para encontrar a categoria mais comum para uma descrição específica\nconst getSuggestedCategory = (descricao) => {\n  const categoriesForDescription = descriptionCategoryCounts[descricao] || {};\n  let maxCount = 0;\n  let suggestedCategory = 'Outros'; // default\n\n  for (const [category, count] of Object.entries(categoriesForDescription)) {\n    if (count > maxCount) {\n      maxCount = count;\n      suggestedCategory = category;\n    } else if (count === maxCount) {\n      // Desempate: manter a primeira categoria com maior frequência\n      suggestedCategory = suggestedCategory || category;\n    }\n  }\n\n  return suggestedCategory;\n};\n\n// Mapeia cada ID sem categoria para um objeto com a categoria sugerida\nconst resultadoFinal = missingCategoryIds.map(item => ({\n  id: item.id,\n  descricao: item.descricao,\n  categoriaSugerida: getSuggestedCategory(item.descricao)\n}));\n\nreturn resultadoFinal;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        280
+      ],
+      "id": "366e740e-cd5e-4011-8295-517beca8921d",
+      "name": "getCategoryToUpdate"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6c4c2841-c469-4572-bf53-653d6b2abd2c",
+              "leftValue": "={{ $json.CATEGORIA }}",
+              "rightValue": "=",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        400
+      ],
+      "id": "6638b061-fd8d-45ff-8081-ccb1d068e336",
+      "name": "hasEmptyCategory"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1aXijBfikktjMGwabQLt5th1fHC5nAFSA-TnygftuvV8",
+          "mode": "list",
+          "cachedResultName": "Controle Financeiro",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1aXijBfikktjMGwabQLt5th1fHC5nAFSA-TnygftuvV8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Extrato",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1aXijBfikktjMGwabQLt5th1fHC5nAFSA-TnygftuvV8/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $json.id }}",
+            "CATEGORIA": "={{ $json.categoriaSugerida }}",
+            "UpdatedType": "Reference"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "DATA",
+              "displayName": "DATA",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "VALOR",
+              "displayName": "VALOR",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "DESCRIÇÃO",
+              "displayName": "DESCRIÇÃO",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "CATEGORIA",
+              "displayName": "CATEGORIA",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "UpdatedType",
+              "displayName": "UpdatedType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1280,
+        280
+      ],
+      "id": "b038861f-7588-46f5-adeb-1fcf75b80fed",
+      "name": "updateEmptyCategory",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "iapbwbDDe7xALx5M",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "01a0b19b-16c0-414f-abc2-c3cc01be992f",
+              "leftValue": "={{ $input.all()}}",
+              "rightValue": 1,
+              "operator": {
+                "type": "array",
+                "operation": "lengthGt",
+                "rightType": "number"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        860,
+        300
+      ],
+      "id": "8a2077ff-390d-4543-ad58-5824ac2a0f00",
+      "name": "hasMatchDescription"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1aXijBfikktjMGwabQLt5th1fHC5nAFSA-TnygftuvV8",
+          "mode": "list",
+          "cachedResultName": "Controle Financeiro",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1aXijBfikktjMGwabQLt5th1fHC5nAFSA-TnygftuvV8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Extrato",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1aXijBfikktjMGwabQLt5th1fHC5nAFSA-TnygftuvV8/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "DESCRIÇÃO",
+              "lookupValue": "={{ $json['DESCRIÇÃO'] }}"
+            }
+          ]
+        },
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "rangeDefinition": "specifyRangeA1",
+              "range": "A1:E"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        680,
+        300
+      ],
+      "id": "03e23af1-c013-4d85-9b75-42835634d7d8",
+      "name": "getEmptyCategoryData",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "iapbwbDDe7xALx5M",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1aXijBfikktjMGwabQLt5th1fHC5nAFSA-TnygftuvV8",
+          "mode": "list",
+          "cachedResultName": "Controle Financeiro",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1aXijBfikktjMGwabQLt5th1fHC5nAFSA-TnygftuvV8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Extrato",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1aXijBfikktjMGwabQLt5th1fHC5nAFSA-TnygftuvV8/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1480,
+        420
+      ],
+      "id": "6bf89ce9-bf1b-44cc-ac51-bfef74bfb5b9",
+      "name": "getAllTransactionsUpdated",
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "iapbwbDDe7xALx5M",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop sobre todos os itens do array\nfor (const item of $input.all()) {\n  // Acessa o campo DATA no formato \"DD/MM/YYYY\"\n  const dataOriginal = item.json.DATA;\n\n  // Divide a data em partes\n  const [dia, mes, ano] = dataOriginal.split('/');\n\n  // Reorganiza a data no formato \"YYYY/MM/DD\"\n  const dataFormatada = `${ano}/${mes}/${dia}`;\n\n  // Atualiza o campo DATA no JSON do item atual\n  item.json.DATA = dataFormatada;\n}\n\n// Retorna todos os itens atualizados\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1680,
+        420
+      ],
+      "id": "6e562971-9e43-4d1c-a32f-370dba5c2ce3",
+      "name": "formattedData",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Retorne para mim um resumo financeiro para o mês atual ({{ new Date().getFullYear() + '/' + (\"0\" + (new Date().getMonth() + 1)).slice(-2) + '/01' }}), assim como uma comparação com o mês anterior ({{ new Date(new Date().setMonth(new Date().getMonth() - 1)).getFullYear() + '/' + (\"0\" + (new Date(new Date().setMonth(new Date().getMonth() - 1)).getMonth() + 1)).slice(-2) + '/01' }}), com receitas (saldos positívos) e despesas (saldos negativos), agrupando por categorias, mostrando quais gastos aumentaram ou diminuiram do mês atual em relação ao mês anterior.\n\nFaça uma consulta também mostrando quais foiram os 3 dias com maiores gastos do mês atual, e onde foram gastos use o campo 'descricao' para saber onde foram os maiores gastos, e o campo 'categoria' para saber qual a categoria do gasto, nesse você vai excluir as categorias \"Aluguel\", \"Financiamentos\" e \"Débito/Cartão\".\nFique a vontade para incluir outros dados ou insights financeiros para além do solicitado.",
+        "options": {
+          "systemMessage": "You are an agent designed to interact with an SQL database.\nGiven an input question, create a syntactically correct {dialect} query to run, then look at the results of the query and return the answer.\nYou can order the results by a relevant column to return the most interesting examples in the database.\nNever query for all the columns from a specific table, only ask for a the few relevant columns given the question.\nYou have access to tools for interacting with the database.\nOnly use the below tools. Only use the information returned by the below tools to construct your final answer.\nYou MUST double check your query before executing it. If you get an error while executing a query, rewrite the query and try again.\n\nGenerate a financial report with insights on the month's revenues and expenses. The report should be formatted in Markdown for Telegram, highlighting totals, variations, and recommendations. Use emojis and clear formatting to make it easy to read.\n\nDO NOT make any DML statements (INSERT, UPDATE, DELETE, DROP etc.) to the database.\n\nHere is the database schema: \n\nCREATE TABLE IF NOT EXISTS public.transacoes\n(\n    id integer NOT NULL DEFAULT,\n    data date NOT NULL,\n    valor numeric(10,2) NOT NULL,\n    identificador uuid NOT NULL,\n    descricao text NOT NULL,\n    categoria character varying(100) NOT NULL,\n    CONSTRAINT transacoes_pkey PRIMARY KEY (id),\n    CONSTRAINT transacoes_identificador_key UNIQUE (identificador)\n)\n\nIf the question does not seem related to the database, just return \"I don't know\" as the answer.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        340,
+        640
+      ],
+      "id": "dddb98b3-c188-4e09-91a9-6318f054ff55",
+      "name": "AI Agent",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-1.5-flash-001",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        320,
+        860
+      ],
+      "id": "d38d8cd9-d494-4182-82d7-3f09af4f7e3c",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "pA7fWNlxOF59b3Jv",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "transacoes",
+          "mode": "list",
+          "cachedResultName": "transacoes"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "data": "={{ $json.DATA }}",
+            "valor": "={{ $json.VALOR }}",
+            "descricao": "={{ $json[\"DESCRIÇÃO\"] }}",
+            "identificador": "={{ $json.ID }}",
+            "categoria": "={{ $json.CATEGORIA }}"
+          },
+          "matchingColumns": [
+            "identificador"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "data",
+              "displayName": "data",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "valor",
+              "displayName": "valor",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "identificador",
+              "displayName": "identificador",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "descricao",
+              "displayName": "descricao",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "categoria",
+              "displayName": "categoria",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1880,
+        420
+      ],
+      "id": "ac115908-9f8e-4943-97a5-7390a01e5a07",
+      "name": "upsertTransactions",
+      "credentials": {
+        "postgres": {
+          "id": "9nIU95BEqp81INAH",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "{{ $fromAI('placeholder_name') }} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgresTool",
+      "typeVersion": 2.5,
+      "position": [
+        560,
+        880
+      ],
+      "id": "dbf5d928-176f-42fc-ad4a-08489e68285e",
+      "name": "Postgres",
+      "credentials": {
+        "postgres": {
+          "id": "9nIU95BEqp81INAH",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "7931864845",
+        "text": "={{ $json.formattedText }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1040,
+        640
+      ],
+      "id": "66a17ad0-eca2-45d2-b8e6-1d347cdf6217",
+      "name": "Telegram",
+      "webhookId": "3122fc7f-eac3-4e77-8b66-e330b1e57ac8",
+      "credentials": {
+        "telegramApi": {
+          "id": "m09vJl94AUqQZGIR",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const output = $input.first().json.output || \"\";\n\n// Substituir \"**\" por negrito do Telegram\nlet formattedText = output.replace(/\\*\\*(.*?)\\*\\*/g, \"*$1*\");\n\n// Substituir \"_\" por itálico do Telegram\nformattedText = formattedText.replace(/__(.*?)__/g, \"_$1_\");\n\n// Substituir títulos Markdown `##` e `###` por equivalente no Telegram\nformattedText = formattedText.replace(/^### (.*$)/gm, \"➖ *$1*\");\nformattedText = formattedText.replace(/^## (.*$)/gm, \"🔹 *$1*\");\n\n// Substituir tabelas Markdown por blocos de código\nformattedText = formattedText.replace(/\\|(.+)\\|/g, \"│$1│\"); // Ajustar bordas\nformattedText = \"```\\n\" + formattedText + \"\\n```\"; // Adicionar blocos de código para evitar formatação errada\n\n// Retornar o texto formatado para ser usado no Telegram\nreturn [{ json: { formattedText } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        780,
+        640
+      ],
+      "id": "b2ea2858-525e-437b-91d2-cbf8d98674bb",
+      "name": "Code"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "readEmails": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "startWorkflow": {
+      "main": [
+        [
+          {
+            "node": "readEmails",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "setEmailAsProcessed",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "getAllTransactions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getAllTransactions": {
+      "main": [
+        [
+          {
+            "node": "hasEmptyCategory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getCategoryToUpdate": {
+      "main": [
+        [
+          {
+            "node": "updateEmptyCategory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "hasEmptyCategory": {
+      "main": [
+        [
+          {
+            "node": "getEmptyCategoryData",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "getAllTransactionsUpdated",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "hasMatchDescription": {
+      "main": [
+        [
+          {
+            "node": "getCategoryToUpdate",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "updateEmptyCategory": {
+      "main": [
+        [
+          {
+            "node": "getAllTransactionsUpdated",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getEmptyCategoryData": {
+      "main": [
+        [
+          {
+            "node": "hasMatchDescription",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getAllTransactionsUpdated": {
+      "main": [
+        [
+          {
+            "node": "formattedData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "formattedData": {
+      "main": [
+        [
+          {
+            "node": "upsertTransactions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "upsertTransactions": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ea6a8aee-34fd-4219-8be2-c3f5d541b11e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "558d88703fb65b2d0e44613bc35916258b0f0bf983c5d4730c00c424b77ca36a"
+  },
+  "id": "mnHBIwsItgtzjrEh",
+  "tags": []
+}
